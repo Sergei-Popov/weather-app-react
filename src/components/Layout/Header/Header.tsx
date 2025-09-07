@@ -5,9 +5,11 @@ import { useState, useEffect } from 'react';
 import styles from './Header.module.css';
 import { searchAutocomplete, userLocation } from '../../../api/api';
 
-function Header( Props: {
-  searchCity: unknown; setSearchCity: (SearchCity: string) => void 
-} ) {
+interface HeaderProps {
+  setSearchCity: (city: string) => void;
+}
+
+function Header( { setSearchCity }: HeaderProps ) {
 
   const [options, setOptions] = useState<AutoCompleteProps['options']>([]);
   const [isInitialized, setIsInitialized] = useState(false);
@@ -23,29 +25,42 @@ function Header( Props: {
 
   // Загружаем город пользователя при инициализации
   useEffect(() => {
-    if (isInitialized) return; // Предотвращаем повторную инициализацию
+    if (isInitialized) return;
     
     const loadInitialCity = async () => {
       try {
         const currentCity = await userLocation();
-        Props.setSearchCity(currentCity || "Москва");
+        
+        if (currentCity) {
+          try {
+            const cityData = await searchAutocomplete(currentCity);
+            if (cityData && cityData.length > 0) {
+              setSearchCity(cityData[0].key);
+            } else {
+              setSearchCity("Москва");
+            }
+          } catch {
+            setSearchCity(currentCity);
+          }
+        } else {
+          setSearchCity("Москва");
+        }
+        
         setIsInitialized(true);
       } catch (error) {
         console.error('Ошибка получения геолокации:', error);
-        Props.setSearchCity("Москва");
+        setSearchCity("Москва");
         setIsInitialized(true);
       }
     };
 
     loadInitialCity();
-  }, [Props, isInitialized]);
+  }, [setSearchCity, isInitialized]);
 
-  const onSelect = (value: string, option: { key: string; value: string; label: string, lat: number, lon: number }) => {
-    // Передаем id города вместо названия
-    const cityName = value;
-    const lat_lon = `${option?.lat || 0},${option?.lon || 0}`;
-    console.log(`Выбран город: ${cityName}\nКоординаты: ${lat_lon}`);
-    Props.setSearchCity(value);
+  const onSelect = (value: string, option: { key: string; value: string; label: string }) => {
+    const cityId = option?.key || value;
+    console.log(`Выбран город: ${value}\nID: ${cityId}`);
+    setSearchCity(cityId);
   };
 
   const handleSearch = async (text: string) => {
