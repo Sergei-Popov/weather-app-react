@@ -85,12 +85,12 @@ function Header( { setSearchCity }: HeaderProps ) {
       </Drawer>
       <AutoComplete
         options={options}
-        style={{ flex: 1, height: '100%', boxShadow: 'rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px', borderRadius: '10px' }}
+        style={{ flex: 1, boxShadow: 'rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px', borderRadius: '10px' }}
         onSelect={onSelect}
         onSearch={handleSearch}
         placeholder="Введите город"
       />
-      <img src="/rounded-logo.png" style={{ width: "10%" }} alt="Логотип" />
+      <img src="/rounded-logo.png" style={{ width: "8%", height: "auto" }} alt="Логотип" />
     </header>
   )
 }
