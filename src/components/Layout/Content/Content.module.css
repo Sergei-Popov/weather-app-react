@@ -4,7 +4,6 @@
   justify-content: center;
   gap: 1em;
   width: 100%;
-  height: 100%;
   padding: 1em;
 }
 
@@ -146,9 +145,22 @@
   
 }
 
-.loading {
+.content__loading {
   display: flex;
+  flex-direction: column;
   justify-content: center;
-  align-items: center;
-  height: 100%;
+  gap: 1em;
+  width: 100%;
+  height: calc(100vh - 6em);
+  padding: 1em;
+
+  .loading {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+  }
 }
