@@ -74,6 +74,7 @@
 
 .maxTemp p, .avgTemp p, .minTemp p {
   font-size: 1em;
+  color: cornflowerblue;
 }
 
 .hero__condition {
