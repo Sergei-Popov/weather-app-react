@@ -1,5 +1,4 @@
 import { AutoComplete, Button, Drawer } from 'antd'
-import type { AutoCompleteProps } from 'antd';
 import { SettingOutlined } from '@ant-design/icons';
 import { useState, useEffect } from 'react';
 import styles from './Header.module.css';
@@ -9,9 +8,15 @@ interface HeaderProps {
   setSearchCity: (city: string) => void;
 }
 
+interface CityOption {
+  key: string;
+  value: string;
+  label: string;
+}
+
 function Header( { setSearchCity }: HeaderProps ) {
 
-  const [options, setOptions] = useState<AutoCompleteProps['options']>([]);
+  const [options, setOptions] = useState<CityOption[]>([]);
   const [isInitialized, setIsInitialized] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -57,7 +62,7 @@ function Header( { setSearchCity }: HeaderProps ) {
     loadInitialCity();
   }, [setSearchCity, isInitialized]);
 
-  const onSelect = (value: string, option: { key: string; value: string; label: string }) => {
+  const onSelect = (value: string, option: CityOption) => {
     const cityId = option?.key || value;
     console.log(`Выбран город: ${value}\nID: ${cityId}`);
     setSearchCity(cityId);
