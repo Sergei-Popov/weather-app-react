@@ -9,6 +9,7 @@
   padding: 0;
   box-sizing: border-box;
   font-family: "Nunito", "sans-serif";
+  font-size: var(--font-size);
 }
 
 #root {
@@ -17,7 +18,6 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
-  font-size: var(--font-size);
 }
 
 @media screen and (max-width: 500px) {
