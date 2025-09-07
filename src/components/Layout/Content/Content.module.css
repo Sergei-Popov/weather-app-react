@@ -28,11 +28,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5em;
-}
-
-.hero__img {
-  width: 7em;
 }
 
 .hero__location {
