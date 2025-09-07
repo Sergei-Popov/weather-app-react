@@ -1,5 +1,6 @@
 .content {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   gap: 1em;
   width: 100%;
@@ -8,12 +9,14 @@
 
 .hero {
   display: flex;
-  align-items: end;
-  justify-content: space-between;
-  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2em;
   width: 100%;
   border: 1px solid #ccc;
   border-radius: 20px;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
   padding: 1em;
 }
 
@@ -24,26 +27,120 @@
 .hero__weather {
   display: flex;
   flex-direction: column;
-  align-items: start;
-  gap: 1rem;
+  align-items: center;
+  gap: 0.5em;
 }
 
 .hero__img {
-  width: 5em;
+  width: 7em;
 }
 
-.hero__temperature {
-  font-size: var(--font-size);
-}
-
-.hero__tempC {
-  font-size: 4em;
-}
-
-.hero__tempF {
-  font-size: 2em;
+.hero__location {
+  font-size: 1.5em;
+  font-weight: bold;
 }
 
 .hero__date {
-  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5em;
+  font-size: 0.9em;
+}
+
+.hero__date p:last-child {
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.hero__temperature {
+  display: flex;
+  justify-content: space-evenly;
+  width: 100%;
+}
+
+.maxTemp, .avgTemp, .minTemp {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4em;
+}
+
+.maxTemp span, .avgTemp span, .minTemp span {
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+.maxTemp p, .avgTemp p, .minTemp p {
+  font-size: 1em;
+}
+
+.hero__condition {
+  font-size: 1em;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1em;
+
+  .additionalData {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+    padding: 1em;
+
+    .dataItem {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 0.5em;
+      justify-content: center;
+    }
+  }
+
+  .container__scroll {
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+    justify-self: flex-start;
+    overflow: auto;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+    padding: 0 1em;
+
+    .forecast {
+      display: flex;
+      justify-self: flex-start;
+      align-self: flex-start;
+      gap: 1em;
+      padding: 1em 0;
+
+      .forecast__day {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 0.7em;
+        font-size: 1em;
+        border-radius: 10px;
+        box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+        height: auto;
+        color: black;
+
+        .forecast__temperature {
+          color: cornflowerblue;
+        }
+      }
+    }
+  }
+  
 }

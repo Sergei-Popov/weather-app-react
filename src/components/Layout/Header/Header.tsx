@@ -1,30 +1,51 @@
-import { AutoComplete, Button, Space, Tooltip } from 'antd'
+import { AutoComplete, Button, Drawer } from 'antd'
 import type { AutoCompleteProps } from 'antd';
+import { SettingOutlined } from '@ant-design/icons';
 import { useState, useEffect } from 'react';
 import styles from './Header.module.css';
 import { searchAutocomplete, userLocation } from '../../../api/api';
 
-function Header( Props: { setSearchCity: (SearchCity: string) => void } ) {
+function Header( Props: {
+  searchCity: unknown; setSearchCity: (SearchCity: string) => void 
+} ) {
+
   const [options, setOptions] = useState<AutoCompleteProps['options']>([]);
+  const [isInitialized, setIsInitialized] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  const showDrawer = () => {
+    setOpen(true);
+  };
+
+  const onClose = () => {
+    setOpen(false);
+  };
 
   // Загружаем город пользователя при инициализации
   useEffect(() => {
+    if (isInitialized) return; // Предотвращаем повторную инициализацию
+    
     const loadInitialCity = async () => {
       try {
         const currentCity = await userLocation();
         Props.setSearchCity(currentCity || "Москва");
+        setIsInitialized(true);
       } catch (error) {
         console.error('Ошибка получения геолокации:', error);
         Props.setSearchCity("Москва");
+        setIsInitialized(true);
       }
     };
 
     loadInitialCity();
-  }, [Props]);
+  }, [Props, isInitialized]);
 
-  const onSelect = (SearchCity: string = "Москва") => {
-    console.log('Выбран город: ', SearchCity);
-    Props.setSearchCity(SearchCity);
+  const onSelect = (value: string, option: { key: string; value: string; label: string, lat: number, lon: number }) => {
+    // Передаем id города вместо названия
+    const cityName = value;
+    const lat_lon = `${option?.lat || 0},${option?.lon || 0}`;
+    console.log(`Выбран город: ${cityName}\nКоординаты: ${lat_lon}`);
+    Props.setSearchCity(value);
   };
 
   const handleSearch = async (text: string) => {
@@ -44,21 +65,26 @@ function Header( Props: { setSearchCity: (SearchCity: string) => void } ) {
 
   return (
     <header className={styles.header}>
+      <Button type="text" onClick={showDrawer}>
+        <SettingOutlined spin={true} style={{ fontSize: '1.5em' }} />
+      </Button>
+      <Drawer
+        title={<h1 style={{ textAlign: "center" as const }}>Menu</h1>}
+        closable={{ 'aria-label': 'Close Button' }}
+        onClose={onClose}
+        open={open}
+        footer={<img src="/horizontal-logo.png" alt="Логотип" style={{ width: "100%"}} />}
+      >
+        <p>Comming soon...</p>
+      </Drawer>
       <AutoComplete
         options={options}
-        style={{ flex: 1, height: '100%' }}
+        style={{ flex: 1, height: '100%', boxShadow: 'rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px', borderRadius: '10px' }}
         onSelect={onSelect}
         onSearch={handleSearch}
         placeholder="Введите город"
       />
-      <Space.Compact>
-        <Tooltip title="На сегодня">
-          <Button type="primary">На сегодня</Button>
-        </Tooltip>
-        <Tooltip title="На неделю">
-          <Button type="default" disabled>На неделю</Button>
-        </Tooltip>
-      </Space.Compact>
+      <img src="/rounded-logo.png" style={{ width: "10%" }} alt="Логотип" />
     </header>
   )
 }
