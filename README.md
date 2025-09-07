@@ -2,6 +2,8 @@
 
 Современное React-приложение для мониторинга погоды с расширенным прогнозом на 14 дней, интерактивным интерфейсом и автоматическим определением местоположения пользователя.
 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-🌤️%20Открыть%20приложение-blue?style=for-the-badge)](https://weather-app-react-pearl-three.vercel.app/)
+
 ![Weather App Preview](public/horizontal-logo.png)
 
 ## ✨ Основная функциональность
@@ -245,6 +247,7 @@ interface ContentProps {
 
 **Sergei-Popov**  
 - GitHub: [@Sergei-Popov](https://github.com/Sergei-Popov)
+- Live Demo: [🌤️ Weather App](https://weather-app-react-pearl-three.vercel.app/)
 - Проект создан: Сентябрь 2025
 
 ---
