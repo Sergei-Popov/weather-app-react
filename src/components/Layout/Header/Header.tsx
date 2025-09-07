@@ -33,15 +33,9 @@ function Header( { setSearchCity }: HeaderProps ) {
     if (isInitialized) return;
     
     const loadInitialCity = async () => {
-      try {
-        const currentCity = await userLocation();
-        setSearchCity(currentCity || "Москва");
-      } catch (error) {
-        console.error('Ошибка получения геолокации:', error);
-        setSearchCity("Москва");
-      } finally {
-        setIsInitialized(true);
-      }
+      const currentCity = await userLocation(); // Функция уже обрабатывает все fallback
+      setSearchCity(currentCity);
+      setIsInitialized(true);
     };
 
     loadInitialCity();

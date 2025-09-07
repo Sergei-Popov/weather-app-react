@@ -175,9 +175,81 @@ export interface CurrentWeatherResponse {
 const API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
 const API_URL = import.meta.env.VITE_WEATHER_API_URL;
 
-export const userLocation = async () => {
-  const response = await axios.get<UserLocation>('https://ipapi.co/json/');
-  return response.data.city;
+export const userLocation = async (): Promise<string> => {
+  // Список сервисов для получения местоположения пользователя
+  const locationServices = [
+    // Сервис 1: ipapi.co (подробная информация)
+    async () => {
+      const response = await axios.get<UserLocation>('https://ipapi.co/json/');
+      return response.data.city;
+    },
+    
+    // Сервис 2: ipify + ip-api.com
+    async () => {
+      const ipResponse = await axios.get('https://api.ipify.org?format=json');
+      const locationResponse = await axios.get(`https://ip-api.com/json/${ipResponse.data.ip}?fields=city`);
+      return locationResponse.data.city;
+    },
+    
+    // Сервис 3: ipgeolocation.io (требует регистрации, но есть бесплатный план)
+    async () => {
+      const response = await axios.get('https://api.ipgeolocation.io/ipgeo?apiKey=free&fields=city');
+      return response.data.city;
+    },
+    
+    // Сервис 4: freeipapi.com
+    async () => {
+      const response = await axios.get('https://freeipapi.com/api/json');
+      return response.data.cityName;
+    },
+    
+    // Сервис 5: Геолокация браузера + Weather API
+    async () => {
+      if (!navigator.geolocation) {
+        throw new Error('Геолокация не поддерживается');
+      }
+      
+      return new Promise<string>((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(
+          async (position) => {
+            try {
+              const { latitude, longitude } = position.coords;
+              const weatherResponse = await axios.get(`${API_URL}/current.json`, {
+                params: {
+                  q: `${latitude},${longitude}`,
+                  key: API_KEY
+                }
+              });
+              resolve(weatherResponse.data.location.name);
+            } catch (error) {
+              reject(error);
+            }
+          },
+          (error) => reject(error),
+          { timeout: 10000, enableHighAccuracy: false }
+        );
+      });
+    }
+  ];
+
+  // Пробуем сервисы по очереди
+  for (let i = 0; i < locationServices.length; i++) {
+    try {
+      console.log(`Попытка получения местоположения через сервис ${i + 1}...`);
+      const city = await locationServices[i]();
+      if (city && city.trim()) {
+        console.log(`Успешно получен город: ${city} (сервис ${i + 1})`);
+        return city;
+      }
+    } catch (error) {
+      console.warn(`Сервис ${i + 1} недоступен:`, error);
+      // Продолжаем со следующим сервисом
+    }
+  }
+  
+  // Если все сервисы не сработали
+  console.log('Все сервисы геолокации недоступны, используется Москва по умолчанию');
+  return "Москва";
 }
 
 export const searchAutocomplete = async (queryText: string) => {
