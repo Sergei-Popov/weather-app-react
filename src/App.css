@@ -20,6 +20,13 @@
   font-size: var(--font-size);
 }
 
+@media screen and (max-width: 500px) {
+  :root {
+    --font-size: 17px;
+  }
+  
+}
+
 @media screen and (max-width: 400px) {
   :root {
     --font-size: 16px;
