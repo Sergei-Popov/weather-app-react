@@ -3,8 +3,9 @@ import { getCurrentWeather } from '../../../api/api';
 import type { CurrentWeatherResponse } from '../../../api/api';
 import { useEffect } from 'react';
 import { useState } from 'react';
-import { Button } from 'antd';
+import { Button, Spin } from 'antd';
 import { FieldTimeOutlined } from '@ant-design/icons';
+
 
 function Content( Props: { searchCity: string } ) {
 
@@ -12,11 +13,16 @@ function Content( Props: { searchCity: string } ) {
   const [selectedDayIndex, setSelectedDayIndex] = useState(0); // Индекс выбранного дня (0 - сегодня)
 
   useEffect(() => {
+    if (!Props.searchCity) {
+      setWeatherData(null);
+      return;
+    }
+
     const fetchData = async () => {
       try {
         const data = await getCurrentWeather(Props.searchCity);
         setWeatherData(data);
-        setSelectedDayIndex(0); // Сбрасываем выбор на сегодня при смене города
+        setSelectedDayIndex(0);
       } catch (error) {
         console.error('Ошибка получения данных о погоде:', error);
       }
@@ -27,7 +33,7 @@ function Content( Props: { searchCity: string } ) {
 
   return (
     <main className={styles.content}>
-      {weatherData ? (
+      {weatherData && Props.searchCity ? (
         <>
           <div className={styles.hero}>
             <div className={styles.hero__weather}>
@@ -100,17 +106,9 @@ function Content( Props: { searchCity: string } ) {
           </div>
         </>
         ) : (
-          <>
-            <div className={`${styles.hero} ${styles.hero__loading}`}>
-              <p>Загрузка...</p>
-            </div>
-            <div className={styles.container}>
-              <h2>Прогноз на 14 дней</h2>
-              <div className={styles.container__scroll} style={{ justifyContent: 'center', alignItems: 'center', display: 'flex', background: '#eee' }}>
-                <p>Загрузка...</p>
-              </div>
-            </div>
-          </>
+          <div className={styles.loading}>
+            <Spin tip="Loading" />
+          </div>
         )}
     </main>
   )

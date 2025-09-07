@@ -3,7 +3,7 @@ import './App.css'
 import Content from './components/Layout/Content/Content'
 import Header from './components/Layout/Header/Header'
 function App() {
-  const [searchCity, setSearchCity] = useState<string>('Москва');
+  const [searchCity, setSearchCity] = useState<string>('');
 
   return (
     <>

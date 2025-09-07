@@ -33,18 +33,24 @@ function Header( { setSearchCity }: HeaderProps ) {
     if (isInitialized) return;
     
     const loadInitialCity = async () => {
-      const currentCity = await userLocation(); // Функция уже обрабатывает все fallback
-      setSearchCity(currentCity);
-      setIsInitialized(true);
+      try {
+        const currentCity = await userLocation();
+        if (currentCity) {
+          setSearchCity(currentCity);
+        }
+      } catch (error) {
+        console.error('Ошибка получения геолокации:', error);
+      } finally {
+        setIsInitialized(true);
+      }
     };
 
     loadInitialCity();
   }, [setSearchCity, isInitialized]);
 
-  const onSelect = (value: string, option: CityOption) => {
-    const cityId = option?.key || value;
-    console.log(`Выбран город: ${value}\nID: ${cityId}`);
-    setSearchCity(cityId);
+  const onSelect = (value: string) => {
+    console.log(`Выбран город: ${value}`);
+    setSearchCity(value);
   };
 
   const handleSearch = async (text: string) => {
@@ -55,7 +61,8 @@ function Header( { setSearchCity }: HeaderProps ) {
     
     try {
       const data = await searchAutocomplete(text);
-      setOptions(data);
+      console.log('Получены данные:', data);
+      setOptions(data || []);
     } catch (error) {
       console.error('Ошибка поиска:', error);
       setOptions([]);
