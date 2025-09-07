@@ -35,26 +35,11 @@ function Header( { setSearchCity }: HeaderProps ) {
     const loadInitialCity = async () => {
       try {
         const currentCity = await userLocation();
-        
-        if (currentCity) {
-          try {
-            const cityData = await searchAutocomplete(currentCity);
-            if (cityData && cityData.length > 0) {
-              setSearchCity(cityData[0].key);
-            } else {
-              setSearchCity("Москва");
-            }
-          } catch {
-            setSearchCity(currentCity);
-          }
-        } else {
-          setSearchCity("Москва");
-        }
-        
-        setIsInitialized(true);
+        setSearchCity(currentCity || "Москва");
       } catch (error) {
         console.error('Ошибка получения геолокации:', error);
         setSearchCity("Москва");
+      } finally {
         setIsInitialized(true);
       }
     };
